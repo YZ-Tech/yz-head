@@ -1,0 +1,25 @@
+{
+  "id": "head",
+  "name": "Robot Head",
+  "version": "0.0.1",
+  "enabled": true,
+  "nav": null,
+  "dashboards": [
+    {
+      "id": "head",
+      "label": "Robot Head (3D)",
+      "component": "HeadDashboard",
+      "variant": 11,
+      "apiBase": "/api/head"
+    }
+  ],
+  "exports": [
+    {
+      "id": "HeadDashboard",
+      "type": "component"
+    }
+  ],
+  "service": {
+    "url": "http://127.0.0.1:9006"
+  }
+}

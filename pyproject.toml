@@ -1,0 +1,31 @@
+[project]
+name = "yz-head"            # dist name; import package is "yz_head"
+version = "0.0.1"
+description = "Stylized robot-head avatar for JarvYZ — amplitude-driven lipsync + bring-your-own .obj head meshes with per-mesh lip/eye calibration. Standalone HTTP service + dynamic-module UI (dashboard variant 11)."
+requires-python = ">=3.10,<3.13"
+license = { text = "MIT" }
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.5.0",
+    "python-multipart>=0.0.9",   # UploadFile (mesh upload)
+]
+
+# Invoked as `python -m yz_head` (daemon) only — no CLI shim.
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "httpx>=0.25", "ruff>=0.4"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["yz_head*"]
+
+# Unlike yz-body (162M of GLB, download-on-first-run), yz-head's default head
+# mesh (~660 KB) + its baked lip/eye calibration ship INSIDE the wheel as
+# package-data and are seeded into <data_root>/meshes on first run. Users add
+# their own by dropping .obj files into that dir. The built SPA ships too.
+[tool.setuptools.package-data]
+yz_head = ["static/**/*", "assets/*"]
