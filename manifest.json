@@ -20,6 +20,12 @@
     }
   ],
   "service": {
-    "url": "http://127.0.0.1:9006"
+    "url": "http://127.0.0.1:9006",
+    "proxy": {
+      "prefix": "/api/head",
+      "spawnModule": "yz_head",
+      "graceS": 15,
+      "timeoutS": 60
+    }
   }
 }
