@@ -27,5 +27,9 @@
       "graceS": 15,
       "timeoutS": 60
     }
+  },
+  "requires": {
+    "network": "none",
+    "sensors": []
   }
 }
