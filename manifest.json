@@ -1,7 +1,7 @@
 {
   "id": "head",
   "name": "Robot Head",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "enabled": true,
   "nav": null,
   "dashboards": [
