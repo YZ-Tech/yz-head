@@ -261,7 +261,8 @@ def main() -> None:
     import uvicorn
 
     host = os.environ.get("HEAD_HOST", "127.0.0.1")
-    port = int(os.environ.get("HEAD_PORT", "9006"))
+    # YZ_PORT (core-resolved, settings.ports) wins; HEAD_PORT + default for standalone.
+    port = int(os.environ.get("YZ_PORT") or os.environ.get("HEAD_PORT") or "9006")
     uvicorn.run(app, host=host, port=port, log_level="info")
 
 
