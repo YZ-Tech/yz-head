@@ -28,10 +28,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from fastapi import Body, FastAPI, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
+from fastapi import Body, FastAPI, HTTPException, UploadFile
 from fastapi.staticfiles import StaticFiles
 
 from . import observer, persistent_settings
+from yz_satellite_common import make_events_router, run_server
 from .__init__ import __version__
 from .settings import settings
 
@@ -222,20 +223,9 @@ def patch_settings(body: dict = Body(...)) -> dict:
     return {"data_root": str(s.data_root)}
 
 
-@app.websocket("/events")
-async def events_ws(ws: WebSocket) -> None:
-    await ws.accept()
-    q = observer.subscribe()
-    try:
-        await ws.send_json({"event": "head", "kind": "hello"})
-        while True:
-            await ws.send_json(await q.get())
-    except WebSocketDisconnect:
-        pass
-    except Exception:  # noqa: BLE001
-        pass
-    finally:
-        observer.unsubscribe(q)
+# The /events WS endpoint (hello frame + queue pump) is the shared router
+# from yz-satellite-common — one body instead of a per-satellite copy.
+app.include_router(make_events_router(observer.broadcaster))
 
 
 # ────────────────────────── mesh bytes (OBJ) ───────────────────────────
@@ -258,12 +248,7 @@ app.mount("/", StaticFiles(directory=str(_static_dir), html=True), name="static"
 
 def main() -> None:
     """`python -m yz_head` entry point."""
-    import uvicorn
-
-    host = os.environ.get("HEAD_HOST", "127.0.0.1")
-    # YZ_PORT (core-resolved, settings.ports) wins; HEAD_PORT + default for standalone.
-    port = int(os.environ.get("YZ_PORT") or os.environ.get("HEAD_PORT") or "9006")
-    uvicorn.run(app, host=host, port=port, log_level="info")
+    run_server(app, 9006, host_env="HEAD_HOST", port_env="HEAD_PORT")
 
 
 if __name__ == "__main__":

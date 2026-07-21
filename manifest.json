@@ -1,7 +1,7 @@
 {
   "id": "head",
   "name": "Robot Head",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "enabled": true,
   "nav": null,
   "dashboards": [
@@ -21,9 +21,9 @@
   ],
   "service": {
     "url": "http://127.0.0.1:9006",
+    "spawnModule": "yz_head",
     "proxy": {
       "prefix": "/api/head",
-      "spawnModule": "yz_head",
       "graceS": 15,
       "timeoutS": 60
     }
